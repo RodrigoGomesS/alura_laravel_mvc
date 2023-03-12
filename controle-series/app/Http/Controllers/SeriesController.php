@@ -45,11 +45,10 @@ class SeriesController extends Controller
      */
     public function store(Request $request)
     {
-        Serie::create($request->all());
+        $serie = Serie::create($request->all());
 
-        $request->session()->flash('message.sucesso', 'Série adicionada com sucesso');
-
-        return redirect()->route('series.index');
+        return redirect()->route('series.index')
+            ->with('message.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
     }
 
     /**
@@ -94,10 +93,10 @@ class SeriesController extends Controller
      */
     public function destroy(Request $request)
     {
+        $serie = Serie::find($request->series); //select a série
         Serie::destroy($request->series); //remove série
 
-        $request->session()->flash('message.sucesso', 'Série removida com sucesso'); // insere uma mensagem flash na sessão
-
-        return redirect()->route('series.index');
+        return redirect()->route('series.index')
+            ->with('message.sucesso', "Série '{$serie->nome}' removida com sucesso"); // insere uma mensagem flash na sessão
     }
 }
