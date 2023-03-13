@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Serie;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,7 @@ class SeriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
         $serie = Serie::create($request->all());
 
@@ -62,27 +63,20 @@ class SeriesController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+
+    public function edit(Serie $series)
     {
-        //
+
+        return view('series.edit')->with('series', $series);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Serie $series, SeriesFormRequest $request)
     {
-        //
+        $series->nome = $request->nome;
+        $series->save();
+
+        return redirect()->route('series.index')
+            ->with('message.sucesso', "Série '{$series->nome}' atualizada com sucesso"); // insere uma mensagem flash na sessão
     }
 
     /**
