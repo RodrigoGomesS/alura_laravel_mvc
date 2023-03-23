@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Serie;
+use App\Models\Episode;
+use App\Models\Season;
+use App\Models\Series;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
@@ -15,7 +17,7 @@ class SeriesController extends Controller
      */
     public function index(Request $request)
     {
-        $series = Serie::all();
+        $series = Series::all();
         $messageSucesso = $request->session()->get('message.sucesso');
         return view(
             'series.index',
@@ -44,7 +46,30 @@ class SeriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
-        $serie = Serie::create($request->all());
+
+        $serie = Series::create($request->all());
+        $seasons = [];
+        $episodes = [];
+
+        for ($i = 1; $i <= $request->seasonsQty; $i++) {
+            $seasons[] = [
+                'series_id' => $serie->id,
+                'number' => $i,
+            ];
+        }
+
+        Season::insert($seasons);
+
+        foreach ($serie->seasons as $season) {
+            for ($e = 1; $e <= $request->episodesPerSeason; $e++) {
+                $episodes[] = [
+                    'season_id' => $season->id,
+                    'number' => $e,
+                ];
+            }
+        }
+
+        Episode::insert($episodes);
 
         return redirect()->route('series.index')
             ->with('message.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
@@ -62,13 +87,12 @@ class SeriesController extends Controller
     }
 
 
-    public function edit(Serie $series)
+    public function edit(Series $series)
     {
-        dd($series->season);
         return view('series.edit')->with('series', $series);
     }
 
-    public function update(Serie $series, SeriesFormRequest $request)
+    public function update(Series $series, SeriesFormRequest $request)
     {
         $series->nome = $request->nome;
         $series->save();
@@ -85,8 +109,8 @@ class SeriesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $serie = Serie::find($request->series); //select a série
-        Serie::destroy($request->series); //remove série
+        $serie = Series::find($request->series); //select a série
+        Series::destroy($request->series); //remove série
 
         return redirect()->route('series.index')
             ->with('message.sucesso', "Série '{$serie->nome}' removida com sucesso"); // insere uma mensagem flash na sessão

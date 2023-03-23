@@ -12,7 +12,9 @@
     <ul class="list-group">
         @foreach ($series as $serie)
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ $serie->nome }}
+                <a href="{{ route('seasons.index', $serie->id) }}">
+                    {{ $serie->nome }}
+                </a>
                 <span class="d-flex align-items-center">
                     <a href="{{ route('series.edit', $serie->id) }}" class="btn btn-primary btn-sm me-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
