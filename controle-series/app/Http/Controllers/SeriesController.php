@@ -63,7 +63,7 @@ class SeriesController extends Controller
 
 
 
-        foreach ($users as $user) {
+        foreach ($users as $index => $user) {
 
             //cria o email, passando os parametros
             $email = new SeriesCreated(
@@ -76,9 +76,10 @@ class SeriesController extends Controller
             //add Assunto
             $email->subject('Série criada');
 
+            $when = now()->addSeconds($index * 5);
+
             //Enviar email
-            Mail::to($user)
-                ->send($email);
+            Mail::to($user)->later($when, $email);
         }
 
         return redirect()->route('series.index')
