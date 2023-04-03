@@ -1,13 +1,5 @@
-<x-layout title="Séries">
+<x-layout title="Séries" :mensagem-sucesso="$mensagemSucesso">
     <a class="btn btn-dark mb-2" href="{{ route('series.create') }}">Adicionar série</a>
-
-    @isset($messageSucesso)
-        <div class="alert alert-success" role="alert">
-            <div>
-                {{ $messageSucesso }}
-            </div>
-        </div>
-    @endisset
 
     <ul class="list-group">
         @foreach ($series as $serie)

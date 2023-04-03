@@ -1,7 +1,5 @@
 <x-layout title="Nova série">
 
-    <a class="btn btn-dark mb-2" href="{{ route('series.index') }}">Home</a>
-
     <form method="post" action="{{ route('series.store') }}">
         @csrf
         <div class="row mb-3">

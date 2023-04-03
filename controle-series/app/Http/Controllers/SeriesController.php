@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episode;
-use App\Models\Season;
 use App\Models\Series;
+use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
+
+    private $repository;
+
+    public function __construct(SeriesRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,12 +25,12 @@ class SeriesController extends Controller
     public function index(Request $request)
     {
         $series = Series::all();
-        $messageSucesso = $request->session()->get('message.sucesso');
+        $mensagemSucesso = $request->session()->get('messagem.sucesso');
         return view(
             'series.index',
             [
                 'series' => $series,
-                'messageSucesso' => $messageSucesso,
+                'mensagemSucesso' => $mensagemSucesso,
             ]
         );
     }
@@ -46,33 +53,9 @@ class SeriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
-
-        $serie = Series::create($request->all());
-        $seasons = [];
-        $episodes = [];
-
-        for ($i = 1; $i <= $request->seasonsQty; $i++) {
-            $seasons[] = [
-                'series_id' => $serie->id,
-                'number' => $i,
-            ];
-        }
-
-        Season::insert($seasons);
-
-        foreach ($serie->seasons as $season) {
-            for ($e = 1; $e <= $request->episodesPerSeason; $e++) {
-                $episodes[] = [
-                    'season_id' => $season->id,
-                    'number' => $e,
-                ];
-            }
-        }
-
-        Episode::insert($episodes);
-
+        $serie = $this->repository->add($request);
         return redirect()->route('series.index')
-            ->with('message.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
+            ->with('messagem.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
     }
 
     /**
@@ -98,7 +81,7 @@ class SeriesController extends Controller
         $series->save();
 
         return redirect()->route('series.index')
-            ->with('message.sucesso', "Série '{$series->nome}' atualizada com sucesso"); // insere uma mensagem flash na sessão
+            ->with('messagem.sucesso', "Série '{$series->nome}' atualizada com sucesso"); // insere uma mensagem flash na sessão
     }
 
     /**
@@ -113,6 +96,6 @@ class SeriesController extends Controller
         Series::destroy($request->series); //remove série
 
         return redirect()->route('series.index')
-            ->with('message.sucesso', "Série '{$serie->nome}' removida com sucesso"); // insere uma mensagem flash na sessão
+            ->with('messagem.sucesso', "Série '{$serie->nome}' removida com sucesso"); // insere uma mensagem flash na sessão
     }
 }
