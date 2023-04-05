@@ -61,8 +61,10 @@ class SeriesController extends Controller
     {
 
         //upload de imagem
-        $coverPath = $request->file('cover')
-            ->store('series_cover', 'public');
+        $coverPath = $request->hasFile('cover')
+            ? $request->file('cover')->store('series_cover', 'public')
+            : null;
+            
         $request->coverPath = $coverPath;
 
         $serie = $this->repository->add($request);
