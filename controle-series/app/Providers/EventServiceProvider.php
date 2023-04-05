@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\SeriesCreated as SeriesCreatedEvent;
+use App\Events\SeriesDeleted as SeriesDeletedEvent;
 use App\Listeners\EmailUserAboutSeriesCreated;
+use App\Listeners\EmailUserAboutSeriesDeleted;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -23,6 +25,10 @@ class EventServiceProvider extends ServiceProvider
 
         SeriesCreatedEvent::class => [
             EmailUserAboutSeriesCreated::class,
+        ],
+
+        SeriesDeletedEvent::class => [
+            EmailUserAboutSeriesDeleted::class
         ],
     ];
 

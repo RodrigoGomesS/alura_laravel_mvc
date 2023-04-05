@@ -10,30 +10,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SeriesCreated
+class SeriesDeleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public string $seriesName;
-    public int $seriesId;
-    public int $seriesSeasonsQty;
-    public int $seriesEpisodesPerSeason;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(
-        string  $seriesName,
-        int $seriesId,
-        int $seriesSeasonsQty,
-        int $seriesEpisodesPerSeason
-    ) {
+    public function __construct(string $seriesName)
+    {
         $this->seriesName = $seriesName;
-        $this->seriesId = $seriesId;
-        $this->seriesSeasonsQty = $seriesSeasonsQty;
-        $this->seriesEpisodesPerSeason = $seriesEpisodesPerSeason;
     }
 
     /**

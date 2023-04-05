@@ -25,6 +25,7 @@ class SeriesFormRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'min:3'],
+            'cover' => 'mimes:jpg,png',
         ];
     }
 
@@ -33,6 +34,7 @@ class SeriesFormRequest extends FormRequest
         return [
             'nome.required' => 'Nome não pode ficar vazio.',
             'nome.min' => 'Nome do campo tem que ser maior que :min.',
+            'cover.mimes' => 'Capa tem que ser do tipo :values.',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\SeriesCreated as SeriesCreatedEvent;
+use App\Events\SeriesDeleted as SeriesDeletedEvent;
 use App\Http\Requests\SeriesFormRequest;
 use App\Mail\SeriesCreated;
 use App\Models\Series;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class SeriesController extends Controller
 {
@@ -57,6 +59,12 @@ class SeriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
+
+        //upload de imagem
+        $coverPath = $request->file('cover')
+            ->store('series_cover', 'public');
+        $request->coverPath = $coverPath;
+
         $serie = $this->repository->add($request);
 
         SeriesCreatedEvent::dispatch(
@@ -106,7 +114,14 @@ class SeriesController extends Controller
     public function destroy(Request $request)
     {
         $serie = Series::find($request->series); //select a série
+
+        isset($serie->cover) ? Storage::disk('public')->delete($serie->cover) : null;
+
         Series::destroy($request->series); //remove série
+
+        SeriesDeletedEvent::dispatch(
+            $serie->nome,
+        );
 
         return redirect()->route('series.index')
             ->with('messagem.sucesso', "Série '{$serie->nome}' removida com sucesso"); // insere uma mensagem flash na sessão
