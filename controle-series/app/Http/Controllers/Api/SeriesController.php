@@ -18,9 +18,14 @@ class SeriesController extends Controller
         $this->repository = $repository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Series::all();
+        $query = Series::query();
+        if ($request->has('nome')) {
+            return $query->where('nome', $request->nome);
+        }
+
+        return $query->paginate(5);
     }
 
     public function store(SeriesFormRequest $request)

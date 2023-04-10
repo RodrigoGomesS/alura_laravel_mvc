@@ -12,6 +12,8 @@ class Series extends Model
 
     protected $fillable = ['nome', 'cover'];
 
+    protected $appends = ['links'];
+
     public function seasons()
     {
         return $this->hasMany(Season::class, 'series_id');
@@ -27,5 +29,23 @@ class Series extends Model
         self::addGlobalScope('ordered', function (Builder $queryBuilder) {
             $queryBuilder->orderBy('nome');
         });
+    }
+
+    public function getLinksAttribute()
+    {
+        return [
+            [
+                'rel' => 'self',
+                'url' => "/api/series/{$this->id}"
+            ],
+            [
+                'rel' => 'seasons',
+                'url' => "/api/series/{$this->id}/seasons"
+            ],
+            [
+                'rel' => 'episodes',
+                'url' => "/api/series/{$this->id}/episodes"
+            ],
+        ];
     }
 }
