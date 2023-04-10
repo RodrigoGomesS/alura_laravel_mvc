@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\EpisodesController;
+use App\Http\Controllers\Api\SeasonsController;
 use App\Http\Controllers\Api\SeriesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('/series', SeriesController::class);
+Route::get('/series/{series}/seasons', [SeasonsController::class, 'index']);
+Route::get('/series/{series}/episodes', [EpisodesController::class, 'index']);
 Route::post('/series/upload', [SeriesController::class, 'upload']);
+Route::patch('/episodes/{episode}', [EpisodesController::class, 'update']);
