@@ -12,3 +12,5 @@ target="_blank">Laravel: e-mails, eventos assíncronos, uploads e testes</a></h3
 
 <h3>Link do curso:<a href="https://cursos.alura.com.br/course/laravel-construindo-apis" 
 target="_blank">Laravel: construindo APIs</a></h3>
+
+<h2>Concluído</h2>
